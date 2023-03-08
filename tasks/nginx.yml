@@ -1,0 +1,11 @@
+- name: Install dependencies
+  ansible.builtin.apt:
+    pkg: 'python3-certbot-nginx'
+
+- name: Run command
+  ansible.builtin.command:
+    cmd: "certbot certonly --nginx --agree-tos -n -m {{ certbot_email }} -d {{ certbot_domain }}"
+    creates: "/etc/letsencrypt/live/certbot_domain/fullchain.pem"
+  with_items: "{{ certbot_domain }}"
+  loop_control:
+    loop_var: certbot_domain
